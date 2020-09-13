@@ -22,9 +22,16 @@ const remove = async id => {
     .del()
 }
 
+const update = async (id, changes) => {
+  return await db('hashtags')
+    .where({ id })
+    .update(changes, [id])
+}
+
 module.exports = {
   add,
   find,
   findById,
-  remove
+  remove,
+  update
 }

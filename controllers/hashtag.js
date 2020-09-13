@@ -48,11 +48,24 @@ const hashtag_delete = (req, res) => {
     });
 }
 
-
+const hashtag_patch = (req, res) => {
+  const { id } = req.params
+  const changes = req.body
+  Hashtag.update(id, changes)
+    .then(hashtag => {
+      hashtag ?
+        res.status(200).json({ message: "hashtag successfully updated" }) :
+        res.status(404).json({ message: "unable to locate hashtag" })
+    })
+    .catch(() => {
+      res.status(500).json({ message: "unable to update" })
+    });
+}
 
 module.exports = {
   hashtag_post,
   hashtag_getAll,
   hashtag_getOne,
   hashtag_delete,
+  hashtag_patch,
 }
