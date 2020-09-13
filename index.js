@@ -1,7 +1,12 @@
 const express = require('express')
+const hashtagRoutes = require('./routes/hashtag');
+const port = 5000
 
 const app = express()
-const port = 5000
+app.use(express.json())
+
 app.listen(port, () => {
   console.log(`app is listening on ${port}`)
 })
+
+app.use('/hashtags', hashtagRoutes);
