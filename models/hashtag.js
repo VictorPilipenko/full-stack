@@ -10,7 +10,21 @@ const find = async () => {
   return await db('hashtags')
 }
 
+const findById = async id => {
+  return await db('hashtags')
+    .where({ id })
+    .first()
+}
+
+const remove = async id => {
+  return await db('hashtags')
+    .where({ id })
+    .del()
+}
+
 module.exports = {
   add,
-  find
+  find,
+  findById,
+  remove
 }
