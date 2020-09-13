@@ -1,0 +1,23 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VictorPilipenko/full-stack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VictorPilipenko/full-stack/issues"
+  },
+  "homepage": "https://github.com/VictorPilipenko/full-stack#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
