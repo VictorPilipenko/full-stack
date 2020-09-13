@@ -9,4 +9,4 @@ app.listen(port, () => {
   console.log(`app is listening on ${port}`)
 })
 
-app.use('/hashtags', hashtagRoutes);
+app.use('/api/hashtags', hashtagRoutes);

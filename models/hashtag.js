@@ -6,6 +6,11 @@ const add = async hashtag => {
   return [id] = await db('hashtags').insert(hashtag)
 }
 
+const find = async () => {
+  return await db('hashtags')
+}
+
 module.exports = {
-  add
+  add,
+  find
 }
