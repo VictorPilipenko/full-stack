@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const bookshelf = require('../config/bookshelf');
 
 const Hashtag = bookshelf.model('Hashtag', {
@@ -6,30 +5,13 @@ const Hashtag = bookshelf.model('Hashtag', {
   hasTimestamps: true,
 
   books() {
-    return this.belongsToMany('Author')
-  }
-
-  initialize() {
-    this.on('saving', model => new User({ email: model.get('email') })
-      .fetch()
-      .then(user => {
-        if (user) throw new Error('That email address already exists')
-      }))
+    return this.belongsToMany('User')
+  },
+  users() {
+    return this.belongsToMany('Hashtag');
   }
 }, {
   // Static class properties and methods
-  hashSaltRounds: 10,
-  async login(email, password) {
-    const user = await new this({ email }).fetch({ require: false })
-
-    if (!user) {
-      return false
-    }
-
-    return await bcrypt.compare(password, user.get('password'))
-      ? user
-      : false
-  }
 })
 
-module.exports = bookshelf.model('User', User);
+module.exports = bookshelf.model('Hashtag', Hashtag);
