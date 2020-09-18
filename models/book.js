@@ -9,6 +9,9 @@ const Book = bookshelf.model('Book', {
   },
   characters() {
     return this.hasMany('Character')
+  },
+  summary() {
+    return this.hasOne('Summary')
   }
 }, {
   // Static class properties and methods
