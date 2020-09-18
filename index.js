@@ -1,12 +1,12 @@
+require('dotenv').config()
 const express = require('express')
-const hashtagRoutes = require('./routes/hashtag');
-const port = 5000
-
+const cors = require('cors')
+const hashtagRoutes = require('./routes/hashtag')
 const app = express()
+
+app.use(cors());
 app.use(express.json())
 
-app.listen(port, () => {
-  console.log(`app is listening on ${port}`)
-})
+app.listen(process.env.PORT, () => console.log(`app is listening on ${process.env.PORT}`))
 
-app.use('/api/hashtags', hashtagRoutes);
+app.use('/api/hashtags', hashtagRoutes)
