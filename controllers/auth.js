@@ -3,136 +3,93 @@ const jwt = require('jsonwebtoken');
 const { matchedData, validationResult } = require('express-validator');
 const User = require('../models/user');
 
+const maxAge = 3 * 24 * 60 * 60;
+
+const createToken = (id) => {
+  return jwt.sign({ id }, process.env.TOKEN_SECRET, {
+    expiresIn: maxAge
+  });
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body
-  const user = await User.login(email, password);
+  const user = await User.login(email, password)
 
-  // check if authentication failed
   if (!user) {
-    res.status(401).send({
+    res.status(401).json({
       message: 'Authentication Failed'
-    });
-    return;
+    })
+    return
   }
 
-  // construct payload
-  const payload = {
-    data: {
-      id: user.get('id'),
-      email: user.get('email')
-    }
-  };
+  const token = createToken(user.get('id'));
+  res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+  res.json({ user: user._id });
 
-  // sign payload and get access-token
-  const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '1h',
-  });
-
-  // sign payload and get refresh-token
-  const refresh_token = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_LIFETIME || '1w',
-  });
-
-  res.send({
-    status: 'success',
-    data: {
-      access_token,
-      refresh_token
-    }
-  });
 }
 
-/* Refresh access-token */
-const refresh = (req, res) => {
-  const token = getToken(req);
-
-  // check if token exists
-  if (!token) {
-    res.status(401).send({
-      status: 'fail',
-      message: 'Request header missing token.'
-    });
-    return;
-  }
-
-  try {
-    // verify token using refresh-token
-    const { data } = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
-    const payload = { data };
-
-    // sign new token using access-token
-    const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: process.env.ACCESS_TOKEN_LIFETIME || '1h', });
-
-    res.send({
-      status: 'success',
-      data: {
-        access_token
-      }
-    });
-
-  } catch (error) {
-    res.status(403).send({
-      status: 'fail',
-      message: 'Invalid token.'
-    });
-    throw error;
-  }
-}
-
-/* Create a new account */
 const register = async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
-    res.status(422).send({
-      status: 'fail',
+    res.status(422).json({
       data: errors
         .array()
-        .map(error => ({ key: error.param, message: error.msg })),
-    });
-    return;
+        .map(error => ({ key: error.param, message: error.msg }))
+    })
+    return
   }
-
-  const data = matchedData(req);
+  const data = matchedData(req)
   try {
-    // hash password
-    data.password = await bcrypt.hash(data.password, User.hashSaltRounds);
-
-    // save new user to db
-    await new User(data).save();
-
-    res.status(201).send({
-      status: 'success',
-      data: null,
-    });
-
+    data.password = await bcrypt.hash(data.password, User.hashSaltRounds)
+    const user = await new User(data).save()
+    const token = createToken(user.get('id'));
+    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+    res.status(201).json({ user: user.get('id') });
   } catch (error) {
-    res.status(500).send({
-      status: 'error',
-      message: 'An unexpected error occurred when trying to register new user.',
+    res.status(500).json({
+      message: 'An unexpected error occurred when trying to register new user'
+    })
+  }
+}
+const logout = (req, res) => {
+  res.cookie('jwt', '', { maxAge: 1 });
+  res.redirect('/');
+}
+
+const check = (req, res) => {
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
+      if (err) {
+        res.status(401).send({
+          message: 'token verification failed'
+        })
+      } else {
+        const user = await new User({ id: decodedToken.id }).fetch({ require: false })
+
+        if (!user) {
+          res.status(401).send({
+            message: 'user not found'
+          })
+        }
+        else {
+          res.send({
+            message: 'authenticated user'
+          })
+        }
+      }
     });
-    throw error;
+  } else {
+    res.status(401).send({
+      message: 'missing token'
+    })
   }
-}
+};
 
-/* Get token från HTTP headers */
-const getToken = req => {
-  // check for authorization header
-  if (!req.headers.authorization) {
-    return false;
-  }
-
-  // get auth type and token
-  const [authType, token] = req.headers.authorization.split(' ');
-
-  // check if authorization type is Bearer
-  if (authType.toLowerCase() !== 'bearer') {
-    return false;
-  }
-
-  return token;
-}
 
 module.exports = {
   login,
   register,
+  logout,
+  check
 }

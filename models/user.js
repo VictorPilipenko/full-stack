@@ -23,7 +23,9 @@ const User = bookshelf.model('User', {
   async login(email, password) {
     const user = await new this({ email }).fetch({ require: false })
 
-    if (!user) return false
+    if (!user) {
+      return false
+    }
 
     return await bcrypt.compare(password, user.get('password'))
       ? user
