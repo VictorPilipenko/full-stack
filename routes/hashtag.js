@@ -4,8 +4,8 @@ const hashtagController = require('../controllers/hashtag');
 
 router.post('/', hashtagController.hashtag_post);
 router.get('/', hashtagController.hashtag_getAll);
-router.get('/:id', hashtagController.hashtag_getOne);
-router.delete('/:id', hashtagController.hashtag_delete);
-router.patch('/:id', hashtagController.hashtag_patch);
+router.get('/:id', hashtagController.hashtag_getById);
+router.delete('/:id', hashtagController.hashtag_deleteById);
+router.patch('/:id', hashtagController.hashtag_patchById);
 
 module.exports = router;

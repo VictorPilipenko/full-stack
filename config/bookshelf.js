@@ -1,8 +1,5 @@
-const knex = require('knex')
 const config = require('./knexfile')
-const bookshelf = require('bookshelf')(knex(config.development));
-
-bookshelf.plugin('registry');
-bookshelf.plugin('pagination');
+const knex = require('knex')(config.development)
+const bookshelf = require('bookshelf')(knex);
 
 module.exports = bookshelf;

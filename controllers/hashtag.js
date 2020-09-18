@@ -21,7 +21,7 @@ const hashtag_getAll = (req, res) => {
     });
 }
 
-const hashtag_getOne = (req, res) => {
+const hashtag_getById = (req, res) => {
   const { id } = req.params
   Hashtag.findById(id)
     .then(hashtag => {
@@ -35,7 +35,7 @@ const hashtag_getOne = (req, res) => {
 }
 
 
-const hashtag_delete = (req, res) => {
+const hashtag_deleteById = (req, res) => {
   const { id } = req.params
   Hashtag.remove(id)
     .then(count => {
@@ -48,7 +48,7 @@ const hashtag_delete = (req, res) => {
     });
 }
 
-const hashtag_patch = (req, res) => {
+const hashtag_patchById = (req, res) => {
   const { id } = req.params
   const changes = req.body
   Hashtag.update(id, changes)
@@ -65,7 +65,7 @@ const hashtag_patch = (req, res) => {
 module.exports = {
   hashtag_post,
   hashtag_getAll,
-  hashtag_getOne,
-  hashtag_delete,
-  hashtag_patch,
+  hashtag_getById,
+  hashtag_deleteById,
+  hashtag_patchById,
 }
