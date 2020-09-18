@@ -53,7 +53,9 @@ const register = async (req, res) => {
 }
 const logout = (req, res) => {
   res.cookie('jwt', '', { maxAge: 1 });
-  res.redirect('/');
+  res.json({
+    message: 'logged out'
+  })
 }
 
 const check = (req, res) => {
@@ -61,26 +63,26 @@ const check = (req, res) => {
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
       if (err) {
-        res.status(401).send({
+        res.status(401).json({
           message: 'token verification failed'
         })
       } else {
         const user = await new User({ id: decodedToken.id }).fetch({ require: false })
 
         if (!user) {
-          res.status(401).send({
+          res.status(401).json({
             message: 'user not found'
           })
         }
         else {
-          res.send({
+          res.json({
             message: 'authenticated user'
           })
         }
       }
     });
   } else {
-    res.status(401).send({
+    res.status(401).json({
       message: 'missing token'
     })
   }
