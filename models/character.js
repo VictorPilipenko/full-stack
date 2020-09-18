@@ -1,6 +1,6 @@
 const bookshelf = require('../config/bookshelf');
 
-const Character = bookshelf.model('Character', {
+module.exports.Character = bookshelf.model('Character', {
   tableName: 'characters',
   hasTimestamps: true,
 
@@ -10,5 +10,3 @@ const Character = bookshelf.model('Character', {
 }, {
   // Static class properties and methods
 })
-
-module.exports = bookshelf.model('Character', Character);

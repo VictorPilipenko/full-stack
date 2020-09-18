@@ -1,6 +1,6 @@
 const bookshelf = require('../config/bookshelf');
 
-const Hashtag = bookshelf.model('Hashtag', {
+module.exports.Hashtag = bookshelf.model('Hashtag', {
   tableName: 'hashtags',
   hasTimestamps: true,
 
@@ -13,5 +13,3 @@ const Hashtag = bookshelf.model('Hashtag', {
 }, {
   // Static class properties and methods
 })
-
-module.exports = bookshelf.model('Hashtag', Hashtag);

@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const bookshelf = require('../config/bookshelf');
 
-const User = bookshelf.model('User', {
+module.exports.User = bookshelf.model('User', {
   tableName: 'users',
   hidden: ['password'],
   hasTimestamps: true,
@@ -24,5 +24,3 @@ const User = bookshelf.model('User', {
       : false
   }
 })
-
-module.exports = bookshelf.model('User', User);
