@@ -21,7 +21,6 @@ const usersSchema = table => {
   table.string('nickname', 50).notNullable()
   table.string('email', 50).unique().notNullable();
   table.string('password', 50).notNullable();
-  table.integer('hashtag_id').references('id').inTable('hashtags')
 }
 
 const hashtagsBooksSchema = table => {
