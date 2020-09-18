@@ -1,4 +1,4 @@
-
+// all tables: hashtags, books, users, characters, summaries
 
 // Многие ко многим: hashtags <-> books
 // Многие ко многим: users <-> hashtags
