@@ -7,7 +7,7 @@ const User = bookshelf.model('User', {
   hasTimestamps: true,
 
   hashtags() {
-    return this.hasMany('Hashtag');
+    return this.belongsToMany('Hashtag');
   },
 
   initialize() {
