@@ -8,14 +8,6 @@ const User = bookshelf.model('User', {
 
   hashtags() {
     return this.belongsToMany('Hashtag');
-  },
-
-  initialize() {
-    this.on('saving', model => new User({ email: model.get('email') })
-      .fetch()
-      .then(user => {
-        if (user) throw new Error('That email address already exists')
-      }))
   }
 }, {
   // Static class properties and methods
