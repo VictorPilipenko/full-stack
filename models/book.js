@@ -4,11 +4,11 @@ const Book = bookshelf.model('Book', {
   tableName: 'hashtags',
   hasTimestamps: true,
 
-  books() {
-    return this.belongsToMany('User')
-  },
-  users() {
+  hashtags() {
     return this.belongsToMany('Hashtag');
+  },
+  characters() {
+    return this.hasMany('Character')
   }
 }, {
   // Static class properties and methods
